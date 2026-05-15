@@ -12,8 +12,10 @@ import type {
   LeadStatus,
   UpdateLeadInput,
 } from "@/modules/leads/types";
+import { useToast } from "@/hooks/use-toast";
 
 const LEADS_KEY = "leads";
+const { error } = useToast();
 
 export function useLeads() {
   return useQuery({
@@ -60,6 +62,9 @@ export function useUpdateLeadStatus() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [LEADS_KEY] });
       queryClient.invalidateQueries({ queryKey: [LEADS_KEY, variables.id] });
+    },
+    onError: (e) => {
+      error(e.message); // fires for ALL queries globally
     },
   });
 }

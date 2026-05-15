@@ -1,201 +1,126 @@
 "use client";
 
-import * as React from "react";
-import { ChevronDown, Search, X, Check } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Checkbox } from "../ui/Checkbox";
 
-export interface FilterOption {
-  value: string;
+export interface FilterOption<T extends string = string> {
+  value: T;
   label: string;
-  color?: string; // tailwind bg color class e.g. "bg-emerald-500"
-  dotColor?: string; // hex or named color for inline dot
 }
 
-interface MultiSelectFilterProps {
+interface MultiSelectFilterProps<T extends string = string> {
   label: string;
-  options: FilterOption[];
-  selected: string[];
-  onChange: (selected: string[]) => void;
-  placeholder?: string;
-  searchPlaceholder?: string;
+  options: FilterOption<T>[];
+  selected: T[];
+  onChange: (selected: T[]) => void;
   className?: string;
 }
 
-export function MultiSelectFilter({
+export function MultiSelectFilter<T extends string = string>({
   label,
   options,
   selected,
   onChange,
-  placeholder = "Any",
-  searchPlaceholder = "Search...",
   className,
-}: MultiSelectFilterProps) {
-  const [open, setOpen] = React.useState(false);
-  const [search, setSearch] = React.useState("");
-  const searchRef = React.useRef<HTMLInputElement>(null);
+}: MultiSelectFilterProps<T>) {
+  const [open, setOpen] = useState(false);
 
-  const filtered = options.filter((o) =>
-    o.label.toLowerCase().includes(search.toLowerCase()),
-  );
-
-  const toggle = (value: string) => {
-    onChange(
-      selected.includes(value)
-        ? selected.filter((v) => v !== value)
-        : [...selected, value],
-    );
-  };
-
-  const clearAll = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onChange([]);
-  };
-
-  React.useEffect(() => {
-    if (open) {
-      setTimeout(() => searchRef.current?.focus(), 50);
+  const handleToggle = (value: T) => {
+    if (selected.includes(value)) {
+      onChange(selected.filter((v) => v !== value));
     } else {
-      setSearch("");
+      onChange([...selected, value]);
     }
-  }, [open]);
+  };
+
+  const handleClearAll = () => {
+    onChange([]);
+    setOpen(false);
+  };
+
+  const selectedLabels = selected
+    .map((v) => options.find((o) => o.value === v)?.label)
+    .filter(Boolean);
 
   const hasSelection = selected.length > 0;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           className={cn(
-            "inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md border text-xs font-medium transition-colors",
-            "bg-background text-foreground border-border",
-            "hover:bg-accent hover:text-accent-foreground",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            hasSelection && "border-primary/40 bg-primary/5",
+            "h-8 gap-1.5 font-normal",
+            hasSelection && "bg-slate-50 border-slate-400",
             className,
           )}
         >
-          <span className="text-muted-foreground font-normal">{label}</span>
-
-          {hasSelection ? (
-            <>
-              <span className="text-foreground font-medium">
-                {selected.length === 1
-                  ? options.find((o) => o.value === selected[0])?.label
-                  : `${selected.length} selected`}
-              </span>
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={clearAll}
-                onKeyDown={(e) => e.key === "Enter" && clearAll(e as any)}
-                className="ml-0.5 rounded-sm text-muted-foreground hover:text-foreground hover:bg-border p-0.5 transition-colors"
-                aria-label="Clear filter"
-              >
-                <X className="size-3" />
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="text-muted-foreground font-normal">
-                {placeholder}
-              </span>
-              <ChevronDown
-                className={cn(
-                  "size-3 text-muted-foreground transition-transform",
-                  open && "rotate-180",
-                )}
-              />
-            </>
+          {label}
+          {hasSelection && (
+            <span className="ml-1 rounded-full bg-slate-900 px-1.5 py-0.5 text-[10px] font-medium text-white">
+              {selected.length}
+            </span>
           )}
-        </button>
+          <ChevronDown className="h-3.5 w-3.5 opacity-50" />
+        </Button>
       </PopoverTrigger>
-
-      <PopoverContent
-        align="start"
-        sideOffset={4}
-        className="w-56 p-0 shadow-md rounded-lg border border-border overflow-hidden"
-      >
-        {/* Header */}
-        <div className="px-3 pt-3 pb-2 border-b border-border">
-          <p className="text-xs font-semibold text-foreground mb-2">
-            Filter by {label}
-          </p>
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 size-3 text-muted-foreground pointer-events-none" />
-            <input
-              ref={searchRef}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={searchPlaceholder}
-              className={cn(
-                "w-full h-7 pl-6 pr-2 text-xs rounded-md border border-input bg-background",
-                "placeholder:text-muted-foreground",
-                "focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring",
-                "transition-colors",
-              )}
-            />
+      <PopoverContent align="start" className="w-56 p-0">
+        <div className="p-2 border-b border-slate-100">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+              {label}
+            </span>
+            {hasSelection && (
+              <button
+                onClick={handleClearAll}
+                className="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1"
+              >
+                <X className="h-3 w-3" />
+                Clear
+              </button>
+            )}
           </div>
         </div>
-
-        {/* Options */}
-        <div className="max-h-52 overflow-y-auto py-1">
-          {filtered.length === 0 ? (
-            <p className="px-3 py-4 text-xs text-center text-muted-foreground">
-              No options found
-            </p>
-          ) : (
-            filtered.map((option) => {
-              const isSelected = selected.includes(option.value);
-              return (
-                <button
-                  key={option.value}
-                  onClick={() => toggle(option.value)}
-                  className={cn(
-                    "w-full flex items-center gap-2.5 px-3 py-1.5 text-xs text-left",
-                    "hover:bg-accent hover:text-accent-foreground transition-colors",
-                    isSelected && "bg-accent/50",
-                  )}
-                >
-                  {/* Custom checkbox */}
-                  <span
-                    className={cn(
-                      "size-3.5 rounded-[3px] border flex items-center justify-center shrink-0 transition-colors",
-                      isSelected
-                        ? "bg-primary border-primary"
-                        : "border-input bg-background",
-                    )}
-                  >
-                    {isSelected && (
-                      <Check className="size-2.5 text-primary-foreground stroke-[3]" />
-                    )}
-                  </span>
-
-                  {/* Color dot */}
-                  {option.dotColor && (
-                    <span
-                      className="size-2 rounded-full shrink-0"
-                      style={{ backgroundColor: option.dotColor }}
-                    />
-                  )}
-
-                  <span className="flex-1 text-foreground">{option.label}</span>
-                </button>
-              );
-            })
-          )}
-        </div>
-
-        {/* Footer */}
-        {hasSelection && (
-          <div className="border-t border-border px-3 py-2">
-            <button
-              onClick={() => onChange([])}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+        <div className="p-1 max-h-64 overflow-y-auto">
+          {options.map((option) => (
+            <label
+              key={option.value}
+              className="flex items-center gap-3 px-2 py-2 rounded-sm cursor-pointer hover:bg-slate-50 transition-colors"
             >
-              Clear all ({selected.length})
-            </button>
+              <Checkbox
+                checked={selected.includes(option.value)}
+                onCheckedChange={() => handleToggle(option.value)}
+              />
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <span className="text-sm text-slate-700 truncate">
+                  {option.label}
+                </span>
+              </div>
+            </label>
+          ))}
+        </div>
+        {hasSelection && (
+          <div className="p-2 border-t border-slate-100 bg-slate-50">
+            <div className="flex flex-wrap gap-1">
+              {selectedLabels.slice(0, 3).map((label) => (
+                <span
+                  key={label}
+                  className="inline-flex items-center rounded-md bg-white border border-slate-200 px-2 py-0.5 text-xs text-slate-600"
+                >
+                  {label}
+                </span>
+              ))}
+              {selectedLabels.length > 3 && (
+                <span className="text-xs text-slate-500 py-0.5">
+                  +{selectedLabels.length - 3} more
+                </span>
+              )}
+            </div>
           </div>
         )}
       </PopoverContent>

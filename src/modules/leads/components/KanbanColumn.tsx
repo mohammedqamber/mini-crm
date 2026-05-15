@@ -3,12 +3,9 @@
 import { useMemo } from "react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { KanbanCard } from "@/modules/leads/components/KanbanCard";
-import {
-  STATUS_LABELS,
-  STATUS_DOT_COLORS,
-  type Lead,
-  type LeadStatus,
-} from "@/modules/leads/types";
+import { type Lead, type LeadStatus } from "@/modules/leads/types";
+import { STATUS_DOT_COLORS } from "../lib/ui";
+import { STATUS_LABELS } from "../lib/status-machine";
 
 interface KanbanColumnProps {
   status: LeadStatus;
@@ -23,7 +20,7 @@ export function KanbanColumn({ status, leads, isLoading }: KanbanColumnProps) {
   );
 
   return (
-    <div className="flex flex-col rounded-lg border border-slate-200 bg-slate-50/50 min-w-[260px] w-[260px]">
+    <div className="flex flex-col rounded-lg border border-slate-200 bg-slate-50/50 min-w-65 w-65">
       <div className="flex items-center gap-2 px-3 py-2.5 border-b border-slate-100">
         <span className={`h-2 w-2 rounded-full ${STATUS_DOT_COLORS[status]}`} />
         <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-700">

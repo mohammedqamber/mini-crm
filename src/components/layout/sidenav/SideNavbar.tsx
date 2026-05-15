@@ -18,16 +18,18 @@ import {
   ClipboardList,
   ListChecks,
   ChevronDown,
+  KanbanSquare,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
-import { NavItem } from "./sidenav/NavItem";
-import { NavSection } from "./sidenav/NavSection";
+import { NavItem } from "./NavItem";
+import { NavSection } from "./NavSection";
+import { NavItem as NavItemType } from "./type";
 
-const topNavItems = [
+const topNavItems: NavItemType[] = [
   {
     icon: <Home className="h-4 w-4" />,
     label: "Home",
-    active: true,
+    href: "/",
   },
   {
     icon: <Zap className="h-4 w-4" />,
@@ -40,7 +42,7 @@ const topNavItems = [
   },
 ];
 
-const workspaceSmartboardsItems = [
+const workspaceSmartboardsItems: NavItemType[] = [
   {
     icon: <FileText className="h-4 w-4" />,
     label: "Solution Requests",
@@ -55,7 +57,7 @@ const workspaceSmartboardsItems = [
   },
 ];
 
-const workspaceItems = [
+const workspaceItems: NavItemType[] = [
   {
     icon: <Building2 className="h-4 w-4" />,
     label: "Accounts",
@@ -71,6 +73,12 @@ const workspaceItems = [
   {
     icon: <UserPlus className="h-4 w-4" />,
     label: "Leads",
+    href: "/leads",
+  },
+  {
+    icon: <KanbanSquare className="h-4 w-4" />,
+    label: "Lead Board",
+    href: "/board",
   },
   {
     icon: <Headphones className="h-4 w-4" />,
@@ -123,8 +131,8 @@ export function SideNavbar() {
               key={item.label}
               icon={item.icon}
               label={item.label}
-              active={item.active}
               badge={item.badge}
+              href={item.href}
             />
           ))}
         </div>
@@ -142,7 +150,12 @@ export function SideNavbar() {
           onToggle={() => setIsWorkspaceSmartboardsCollapsed((prev) => !prev)}
         >
           {workspaceSmartboardsItems.map((item) => (
-            <NavItem key={item.label} icon={item.icon} label={item.label} />
+            <NavItem
+              key={item.label}
+              icon={item.icon}
+              label={item.label}
+              href={item.href}
+            />
           ))}
         </NavSection>
 
@@ -152,7 +165,12 @@ export function SideNavbar() {
           onToggle={() => setIsWorkspaceCollapsed((prev) => !prev)}
         >
           {workspaceItems.map((item) => (
-            <NavItem key={item.label} icon={item.icon} label={item.label} />
+            <NavItem
+              key={item.label}
+              icon={item.icon}
+              label={item.label}
+              href={item.href}
+            />
           ))}
         </NavSection>
       </div>

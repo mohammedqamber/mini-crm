@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import type { Lead } from "@/modules/leads/types";
+import type { Lead, LeadStatus } from "@/modules/leads/types";
 
 interface LeadFilters {
   searchQuery: string;
-  statusFilter: string;
+  statusFilter: LeadStatus[];
 }
 
 export function useFilteredLeads(
@@ -21,7 +21,8 @@ export function useFilteredLeads(
         lead.name.toLowerCase().includes(normalizedSearch) ||
         lead.email.toLowerCase().includes(normalizedSearch);
 
-      const matchesStatus = !statusFilter || lead.status === statusFilter;
+      const matchesStatus =
+        statusFilter.length === 0 || statusFilter.includes(lead.status);
 
       return matchesSearch && matchesStatus;
     });

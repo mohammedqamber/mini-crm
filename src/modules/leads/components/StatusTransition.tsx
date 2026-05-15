@@ -8,8 +8,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
 import { Button } from "@/components/ui/Button";
-import { STATUS_LABELS, type LeadStatus } from "@/modules/leads/types";
-import { getValidTransitions, isTerminalStatus } from "../lib/status-machine";
+import { type LeadStatus } from "@/modules/leads/types";
+import {
+  getValidTransitions,
+  isTerminalStatus,
+  STATUS_LABELS,
+} from "../lib/status-machine";
 
 interface StatusTransitionProps {
   currentStatus: LeadStatus;

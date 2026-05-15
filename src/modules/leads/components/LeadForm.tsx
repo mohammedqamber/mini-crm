@@ -1,8 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { getValidTransitions } from "../lib/status-machine";
-import { Lead, LeadStatus, STATUS_LABELS } from "../types";
+import { Lead, LeadStatus } from "../types";
 import { useLeadForm } from "../hooks/useLeadForm";
 import { FormInput } from "@/components/form/FormInput";
 import { isRequired, validateEmail, validatePhone } from "@/lib/validators";

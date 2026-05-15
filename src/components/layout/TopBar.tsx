@@ -3,16 +3,9 @@
 import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { Separator } from "@/components/ui/Separator";
-
-function getPageTitle(pathname: string): string {
-  if (pathname.startsWith("/leads/") && pathname.endsWith("/edit"))
-    return "Edit Lead";
-  if (pathname.startsWith("/leads/")) return "Lead Details";
-  if (pathname === "/leads/new") return "New Lead";
-  if (pathname === "/leads") return "Leads";
-  if (pathname === "/board") return "Board";
-  return "Dashboard";
-}
+import { SearchInput } from "../ui/SearchInput";
+import { Search } from "lucide-react";
+import { getPageTitle } from "@/lib/utils";
 
 interface TopBarProps {
   searchValue?: string;
@@ -32,18 +25,19 @@ export function TopBar({ searchValue, onSearchChange, children }: TopBarProps) {
 
       <div className="flex items-center gap-3">
         {onSearchChange && (
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search leads..."
-              value={searchValue}
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="h-8 w-64 rounded-md border border-slate-300 bg-white pl-3 pr-8 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
-            />
-            <kbd className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium text-slate-400">
-              /
-            </kbd>
-          </div>
+          <SearchInput
+            value={searchValue ?? ""}
+            onChange={onSearchChange}
+            placeholder="Search"
+            leftIcon={<Search className="h-4 w-4" />}
+            rightSlot={
+              <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium text-slate-400">
+                /
+              </kbd>
+            }
+            onClear={() => onSearchChange("")}
+            className="w-64"
+          />
         )}
 
         {children}

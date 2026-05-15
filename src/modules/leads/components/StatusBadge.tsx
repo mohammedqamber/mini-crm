@@ -1,11 +1,9 @@
 "use client";
 
 import { Badge } from "@/components/ui/Badge";
-import {
-  STATUS_LABELS,
-  STATUS_COLORS,
-  type LeadStatus,
-} from "@/modules/leads/types";
+import { type LeadStatus } from "@/modules/leads/types";
+import { STATUS_COLORS } from "../lib/ui";
+import { STATUS_LABELS } from "../lib/status-machine";
 
 interface StatusBadgeProps {
   status: LeadStatus;

@@ -9,25 +9,21 @@ import { LeadsTable } from "@/modules/leads/components/LeadsTable";
 import { useLeadSearchShortcut } from "@/modules/leads/hooks/use-lead-search-shortcut";
 import { useLeads } from "@/modules/leads/hooks/useLeads";
 import { useSearchParamsState } from "@/hooks/use-search-params-state";
-import { useFilteredLeads } from "../hooks/useFilteredLeads";
+import { useFilteredLeads } from "@/modules/leads/hooks/useFilteredLeads";
+import type { LeadStatus } from "@/modules/leads/types";
+import { useSearchParamsArrayState } from "@/hooks/useSearchParamsArrayState";
+import { StatusFilter } from "./StatusFilter";
 import { FilterBar } from "@/components/filters/FilterBar";
 
-export function LeadsPageClient() {
+export default function LeadsPageClient() {
   const router = useRouter();
   const { data: leads, isLoading, isError, error, refetch } = useLeads();
   const [searchQuery, setSearchQuery] = useSearchParamsState("search");
-  const [statusFilter, setStatusFilter] = useSearchParamsState("status");
+  const [statusFilter, setStatusFilter] =
+    useSearchParamsArrayState<LeadStatus>("status");
   const filteredLeads = useFilteredLeads(leads, { searchQuery, statusFilter });
 
   useLeadSearchShortcut();
-
-  const STATUS_OPTIONS = [
-    { value: "NEW", label: "New", dotColor: "#3b82f6" },
-    { value: "CONTACTED", label: "Contacted", dotColor: "#f59e0b" },
-    { value: "QUALIFIED", label: "Qualified", dotColor: "#a855f7" },
-    { value: "CONVERTED", label: "Converted", dotColor: "#22c55e" },
-    { value: "LOST", label: "Lost", dotColor: "#ef4444" },
-  ];
 
   const handleSearchChange = useCallback(
     (value: string) => {
@@ -53,13 +49,11 @@ export function LeadsPageClient() {
   return (
     <div>
       <TopBar searchValue={searchQuery} onSearchChange={handleSearchChange}>
-        <LeadListActions
-          statusFilter={statusFilter}
-          onStatusChange={setStatusFilter}
-          onCreateLead={() => router.push("/leads/new")}
-        />
+        <LeadListActions onCreateLead={() => router.push("/leads/new")} />
       </TopBar>
-      <FilterBar rules={{ count: 4 }} viewSettings={{}} />
+      <FilterBar>
+        <StatusFilter selected={statusFilter} onChange={setStatusFilter} />
+      </FilterBar>
 
       <div className="p-6">
         <div className="mb-4 flex items-center justify-between">
@@ -72,7 +66,7 @@ export function LeadsPageClient() {
         <LeadsTable
           leads={filteredLeads}
           isLoading={isLoading}
-          hasFilters={Boolean(searchQuery || statusFilter)}
+          hasFilters={Boolean(searchQuery || statusFilter.length > 0)}
         />
       </div>
     </div>

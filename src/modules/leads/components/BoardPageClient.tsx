@@ -8,17 +8,17 @@ import { TopBar } from "@/components/layout/TopBar";
 import { KanbanColumn } from "@/modules/leads/components/KanbanColumn";
 import { useLeads, useUpdateLeadStatus } from "@/modules/leads/hooks/useLeads";
 import { useSearchParamsState } from "@/hooks/use-search-params-state";
-import {
-  ALL_STATUSES,
-  type Lead,
-  type LeadStatus,
-} from "@/modules/leads/types";
+import { type Lead, type LeadStatus } from "@/modules/leads/types";
+import { ALL_STATUSES } from "@/modules/leads/lib/status-machine";
+import { useToast } from "@/hooks/use-toast";
 
-export function BoardPageClient() {
+export default function BoardPageClient() {
   const { data: leads, isLoading, isError, error, refetch } = useLeads();
   const updateLeadStatus = useUpdateLeadStatus();
   const [searchQuery] = useSearchParamsState("search");
   const [optimisticLeads, setOptimisticLeads] = useState<Lead[]>([]);
+
+  const { error: ErrorToast } = useToast();
 
   // Sync optimistic state with server data
   useEffect(() => {
@@ -76,18 +76,17 @@ export function BoardPageClient() {
       ),
     );
 
-    // Update backend
+    // this  will Update backend
     try {
       await updateLeadStatus.mutateAsync({
         id: leadId,
         leadStatus: newStatus,
       });
     } catch (error) {
-      // Revert on error
+      // reverting optimistic update
       if (leads) {
         setOptimisticLeads(leads);
       }
-      console.error("Failed to update lead status:", error);
     }
   };
 
