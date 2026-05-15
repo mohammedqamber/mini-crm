@@ -1,17 +1,31 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { Button } from "@/components/ui/Button";
 import { TopBar } from "@/components/layout/TopBar";
 import { KanbanColumn } from "@/modules/leads/components/KanbanColumn";
-import { useLeads } from "@/modules/leads/hooks/useLeads";
+import { useLeads, useUpdateLeadStatus } from "@/modules/leads/hooks/useLeads";
 import { useSearchParamsState } from "@/hooks/use-search-params-state";
-import { ALL_STATUSES, type Lead } from "@/modules/leads/types";
+import {
+  ALL_STATUSES,
+  type Lead,
+  type LeadStatus,
+} from "@/modules/leads/types";
 
 export function BoardPageClient() {
   const { data: leads, isLoading, isError, error, refetch } = useLeads();
+  const updateLeadStatus = useUpdateLeadStatus();
   const [searchQuery] = useSearchParamsState("search");
+  const [optimisticLeads, setOptimisticLeads] = useState<Lead[]>([]);
+
+  // Sync optimistic state with server data
+  useEffect(() => {
+    if (leads) {
+      setOptimisticLeads(leads);
+    }
+  }, [leads]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -28,15 +42,54 @@ export function BoardPageClient() {
   }, []);
 
   const filteredLeads = useMemo(() => {
-    if (!leads) return [];
-    if (!searchQuery) return leads;
+    if (!optimisticLeads.length) return [];
+    if (!searchQuery) return optimisticLeads;
 
-    return leads.filter(
+    return optimisticLeads.filter(
       (lead: Lead) =>
         lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         lead.email.toLowerCase().includes(searchQuery.toLowerCase()),
     );
-  }, [leads, searchQuery]);
+  }, [optimisticLeads, searchQuery]);
+
+  const onDragEnd = async (result: DropResult) => {
+    const { source, destination, draggableId } = result;
+
+    // Dropped outside a valid droppable
+    if (!destination) return;
+
+    // Dropped in the same position
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+
+    const newStatus = destination.droppableId as LeadStatus;
+    const leadId = draggableId;
+
+    // Optimistic update
+    setOptimisticLeads((prev) =>
+      prev.map((lead) =>
+        lead.id === leadId ? { ...lead, status: newStatus } : lead,
+      ),
+    );
+
+    // Update backend
+    try {
+      await updateLeadStatus.mutateAsync({
+        id: leadId,
+        leadStatus: newStatus,
+      });
+    } catch (error) {
+      // Revert on error
+      if (leads) {
+        setOptimisticLeads(leads);
+      }
+      console.error("Failed to update lead status:", error);
+    }
+  };
 
   if (isError) {
     return (
@@ -64,16 +117,18 @@ export function BoardPageClient() {
       <TopBar searchValue={searchQuery} onSearchChange={() => {}} />
 
       <div className="p-6">
-        <div className="flex gap-4 overflow-x-auto pb-2">
-          {ALL_STATUSES.map((status) => (
-            <KanbanColumn
-              key={status}
-              status={status}
-              leads={filteredLeads}
-              isLoading={isLoading}
-            />
-          ))}
-        </div>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className="flex gap-4 overflow-x-auto pb-2">
+            {ALL_STATUSES.map((status) => (
+              <KanbanColumn
+                key={status}
+                status={status}
+                leads={filteredLeads}
+                isLoading={isLoading}
+              />
+            ))}
+          </div>
+        </DragDropContext>
       </div>
     </div>
   );

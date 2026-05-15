@@ -89,23 +89,6 @@ export function LeadForm({ lead, isEdit = false }: LeadFormProps) {
         error={errors.source?.message}
       />
 
-      {isEdit && lead && (
-        <FormSelect
-          id="status"
-          label="Status"
-          value={watchedStatus}
-          onChange={(v) =>
-            setValue("status", v as LeadStatus, { shouldValidate: true })
-          }
-          options={[...getValidTransitions(lead.status), lead.status].map(
-            (s) => ({
-              value: s,
-              label: STATUS_LABELS[s],
-            }),
-          )}
-        />
-      )}
-
       {/* <div className="flex gap-3 pt-4">
           <Button type="submit" disabled={!isValid || isSubmitting}>
             {isSubmitting

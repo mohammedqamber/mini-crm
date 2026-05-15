@@ -10,6 +10,7 @@ import { useLeadSearchShortcut } from "@/modules/leads/hooks/use-lead-search-sho
 import { useLeads } from "@/modules/leads/hooks/useLeads";
 import { useSearchParamsState } from "@/hooks/use-search-params-state";
 import { useFilteredLeads } from "../hooks/useFilteredLeads";
+import { FilterBar } from "@/components/filters/FilterBar";
 
 export function LeadsPageClient() {
   const router = useRouter();
@@ -19,6 +20,14 @@ export function LeadsPageClient() {
   const filteredLeads = useFilteredLeads(leads, { searchQuery, statusFilter });
 
   useLeadSearchShortcut();
+
+  const STATUS_OPTIONS = [
+    { value: "NEW", label: "New", dotColor: "#3b82f6" },
+    { value: "CONTACTED", label: "Contacted", dotColor: "#f59e0b" },
+    { value: "QUALIFIED", label: "Qualified", dotColor: "#a855f7" },
+    { value: "CONVERTED", label: "Converted", dotColor: "#22c55e" },
+    { value: "LOST", label: "Lost", dotColor: "#ef4444" },
+  ];
 
   const handleSearchChange = useCallback(
     (value: string) => {
@@ -50,6 +59,7 @@ export function LeadsPageClient() {
           onCreateLead={() => router.push("/leads/new")}
         />
       </TopBar>
+      <FilterBar rules={{ count: 4 }} viewSettings={{}} />
 
       <div className="p-6">
         <div className="mb-4 flex items-center justify-between">

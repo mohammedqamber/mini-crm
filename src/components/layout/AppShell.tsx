@@ -8,7 +8,7 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className=" bg-background">
       <SideNavbar />
-      <div className="pl-60">
+      <div className="pl-70">
         <main className="min-h-screen">{children}</main>
       </div>
     </div>
