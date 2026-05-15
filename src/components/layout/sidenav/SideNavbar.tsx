@@ -117,11 +117,11 @@ export function SideNavbar() {
       </div>
 
       <div className="px-3 py-3">
-        <button className="flex w-full items-center gap-2 rounded-md border border-input bg-background px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent">
+        <div className="flex w-full items-center gap-2 rounded-md border border-input bg-background px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent">
           <Search className="h-4 w-4" />
           <span className="flex-1 text-left">Quick Search...</span>
           <kbd>ctrl+k</kbd>
-        </button>
+        </div>
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto px-3 py-2">
@@ -176,7 +176,7 @@ export function SideNavbar() {
       </div>
 
       <div className="border-t border-border p-3">
-        <button className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent">
+        <div className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent">
           <Avatar className="h-7 w-7">
             <AvatarFallback className="bg-amber-500 text-xs font-medium text-white">
               J
@@ -186,7 +186,7 @@ export function SideNavbar() {
             Jamie Carter
           </span>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        </button>
+        </div>
       </div>
     </aside>
   );

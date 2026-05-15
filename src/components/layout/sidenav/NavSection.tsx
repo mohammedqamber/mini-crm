@@ -17,6 +17,7 @@ export function NavSection({
   return (
     <div className="space-y-1">
       <button
+        data-lpignore="true"
         type="button"
         onClick={onToggle}
         className="flex w-full items-center justify-between px-2 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground"

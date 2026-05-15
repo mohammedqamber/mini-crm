@@ -4,7 +4,6 @@ import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { TopBar } from "@/components/layout/TopBar";
 import { LeadListActions } from "@/modules/leads/components/LeadListActions";
-import { LeadErrorState } from "@/modules/leads/components/LeadPageStates";
 import { LeadsTable } from "@/modules/leads/components/LeadsTable";
 import { useLeadSearchShortcut } from "@/modules/leads/hooks/use-lead-search-shortcut";
 import { useLeads } from "@/modules/leads/hooks/useLeads";
@@ -14,6 +13,7 @@ import type { LeadStatus } from "@/modules/leads/types";
 import { useSearchParamsArrayState } from "@/hooks/useSearchParamsArrayState";
 import { StatusFilter } from "./StatusFilter";
 import { FilterBar } from "@/components/filters/FilterBar";
+import ErrorState from "@/components/error/ErrorState";
 
 export default function LeadsPageClient() {
   const router = useRouter();
@@ -36,10 +36,9 @@ export default function LeadsPageClient() {
     return (
       <div>
         <TopBar />
-        <LeadErrorState
+        <ErrorState
           title="Failed to load leads"
           error={error}
-          fallback="Something went wrong"
           onRetry={() => refetch()}
         />
       </div>

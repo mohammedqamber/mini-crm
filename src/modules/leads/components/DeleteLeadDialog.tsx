@@ -1,17 +1,8 @@
 "use client";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/AlertDialog";
 import { useDeleteLead } from "@/modules/leads/hooks/useLeads";
 import { useToast } from "@/hooks/use-toast";
+import { ConfirmActionDialog } from "@/components/ui/ConfirmActionDialog";
 
 interface DeleteLeadDialogProps {
   leadId: string;
@@ -43,31 +34,15 @@ export function DeleteLeadDialog({
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Delete Lead</AlertDialogTitle>
-          <AlertDialogDescription>
-            Are you sure you want to delete <strong>{leadName}</strong>? This
-            action cannot be undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={deleteLead.isPending}>
-            Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={(e) => {
-              e.preventDefault();
-              handleDelete();
-            }}
-            disabled={deleteLead.isPending}
-            className="bg-red-600 text-white hover:bg-red-700"
-          >
-            {deleteLead.isPending ? "Deleting..." : "Delete"}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <ConfirmActionDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Delete Lead"
+      description={`Are you sure you want to delete ${leadName}? This action cannot be undone.`}
+      confirmText={deleteLead.isPending ? "Deleting..." : "Delete"}
+      confirmClassName="bg-red-600 text-white hover:bg-red-700"
+      isPending={deleteLead.isPending}
+      onConfirm={handleDelete}
+    />
   );
 }

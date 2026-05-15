@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, RefreshCw } from "lucide-react";
-import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import { Button } from "@/components/ui/Button";
+import { DropResult } from "@hello-pangea/dnd";
 import { TopBar } from "@/components/layout/TopBar";
-import { KanbanColumn } from "@/modules/leads/components/KanbanColumn";
 import { useLeads, useUpdateLeadStatus } from "@/modules/leads/hooks/useLeads";
 import { useSearchParamsState } from "@/hooks/use-search-params-state";
 import { type Lead, type LeadStatus } from "@/modules/leads/types";
-import { ALL_STATUSES } from "@/modules/leads/lib/status-machine";
+import {
+  ALL_STATUSES,
+  getValidTransitions,
+} from "@/modules/leads/lib/status-machine";
 import { useToast } from "@/hooks/use-toast";
+import ErrorState from "@/components/error/ErrorState";
+import { LeadKanbanColumn } from "./LeadKanbanColumn";
+import { KanbanBoard } from "@/components/kanban-builder/KanbanBoard";
 
 export default function BoardPageClient() {
   const { data: leads, isLoading, isError, error, refetch } = useLeads();
@@ -66,6 +69,15 @@ export default function BoardPageClient() {
       return;
     }
 
+    if (
+      !getValidTransitions(source.droppableId as LeadStatus).includes(
+        destination.droppableId as LeadStatus,
+      )
+    ) {
+      ErrorToast("Invalid status update");
+      return;
+    }
+
     const newStatus = destination.droppableId as LeadStatus;
     const leadId = draggableId;
 
@@ -92,22 +104,11 @@ export default function BoardPageClient() {
 
   if (isError) {
     return (
-      <div>
-        <TopBar />
-        <div className="flex flex-col items-center justify-center py-24">
-          <AlertTriangle className="h-10 w-10 text-red-500 mb-4" />
-          <h3 className="text-lg font-medium text-slate-900 mb-1">
-            Failed to load board
-          </h3>
-          <p className="text-sm text-slate-500 mb-4">
-            {error instanceof Error ? error.message : "Something went wrong"}
-          </p>
-          <Button onClick={() => refetch()} variant="outline">
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Retry
-          </Button>
-        </div>
-      </div>
+      <ErrorState
+        title="Failed to load board"
+        error={error}
+        onRetry={() => refetch()}
+      />
     );
   }
 
@@ -116,10 +117,10 @@ export default function BoardPageClient() {
       <TopBar searchValue={searchQuery} onSearchChange={() => {}} />
 
       <div className="p-6">
-        <DragDropContext onDragEnd={onDragEnd}>
+        <KanbanBoard onDragEnd={onDragEnd}>
           <div className="flex gap-4 overflow-x-auto pb-2">
             {ALL_STATUSES.map((status) => (
-              <KanbanColumn
+              <LeadKanbanColumn
                 key={status}
                 status={status}
                 leads={filteredLeads}
@@ -127,7 +128,7 @@ export default function BoardPageClient() {
               />
             ))}
           </div>
-        </DragDropContext>
+        </KanbanBoard>
       </div>
     </div>
   );

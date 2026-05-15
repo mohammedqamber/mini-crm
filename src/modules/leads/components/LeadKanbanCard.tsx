@@ -2,26 +2,25 @@
 
 import { useRouter } from "next/navigation";
 import { Lock } from "lucide-react";
-import { DraggableProvided } from "@hello-pangea/dnd";
 import { StatusBadge } from "@/modules/leads/components/StatusBadge";
 import type { Lead } from "@/modules/leads/types";
 import { isTerminalStatus } from "../lib/status-machine";
+import { KanbanCard } from "@/components/kanban-builder/KanbanCard";
 
-interface KanbanCardProps {
+interface LeadKanbanCardProps {
   lead: Lead;
-  provided: DraggableProvided;
+  index: number;
 }
 
-export function KanbanCard({ lead, provided }: KanbanCardProps) {
+export function LeadKanbanCard({ lead, index }: LeadKanbanCardProps) {
   const router = useRouter();
 
   return (
-    <div
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-      {...provided.dragHandleProps}
+    <KanbanCard
+      draggableId={lead.id}
+      index={index}
+      isDragDisabled={isTerminalStatus(lead.status)}
       onClick={() => router.push(`/leads/${lead.id}`)}
-      className="cursor-pointer rounded-md border border-slate-200 bg-white p-3 shadow-sm transition-shadow hover:shadow-md"
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <h4 className="text-sm font-medium text-slate-900 leading-tight">
@@ -40,6 +39,6 @@ export function KanbanCard({ lead, provided }: KanbanCardProps) {
           <span className="text-[10px] text-slate-400">{lead.source}</span>
         )}
       </div>
-    </div>
+    </KanbanCard>
   );
 }
