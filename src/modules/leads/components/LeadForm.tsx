@@ -5,7 +5,6 @@ import { Lead, LeadStatus } from "../types";
 import { useLeadForm } from "../hooks/useLeadForm";
 import { FormInput } from "@/components/form/FormInput";
 import { isRequired, validateEmail, validatePhone } from "@/lib/validators";
-import { FormSelect } from "@/components/form/FormSelect";
 import { FormShell } from "@/components/form/Form";
 
 interface FormData {
@@ -49,7 +48,6 @@ export function LeadForm({ lead, isEdit = false }: LeadFormProps) {
       onSubmit={handleSubmit(onSubmit)}
       submitLabel={isEdit ? "Update Lead" : "Create Lead"}
     >
-      {/* <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-lg"> */}
       <FormInput
         id="name"
         label="Name"
@@ -87,24 +85,6 @@ export function LeadForm({ lead, isEdit = false }: LeadFormProps) {
         register={register}
         error={errors.source?.message}
       />
-
-      {/* <div className="flex gap-3 pt-4">
-          <Button type="submit" disabled={!isValid || isSubmitting}>
-            {isSubmitting
-              ? "Saving..."
-              : isEdit
-                ? "Update Lead"
-                : "Create Lead"}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => window.history.back()}
-          >
-            Cancel
-          </Button>
-        </div>
-      </form> */}
     </FormShell>
   );
 }

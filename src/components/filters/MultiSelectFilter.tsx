@@ -53,9 +53,9 @@ export function MultiSelectFilter<T extends string = string>({
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          size="sm"
+          size="default"
           className={cn(
-            "h-8 gap-1.5 font-normal",
+            "h-8 gap-1.5",
             hasSelection && "bg-slate-50 border-slate-400",
             className,
           )}
@@ -104,7 +104,7 @@ export function MultiSelectFilter<T extends string = string>({
             </label>
           ))}
         </div>
-        {hasSelection && (
+        {/* {hasSelection && (
           <div className="p-2 border-t border-slate-100 bg-slate-50">
             <div className="flex flex-wrap gap-1">
               {selectedLabels.slice(0, 3).map((label) => (
@@ -122,7 +122,7 @@ export function MultiSelectFilter<T extends string = string>({
               )}
             </div>
           </div>
-        )}
+        )} */}
       </PopoverContent>
     </Popover>
   );

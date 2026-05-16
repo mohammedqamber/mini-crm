@@ -15,12 +15,12 @@ export function FilterBar({ children, className }: FilterBarProps) {
       role="toolbar"
       aria-label="Table filters"
       className={cn(
-        " flex items-center gap-1.5 px-4 py-2 border-b border-border bg-background shrink-0",
+        " flex items-center justify-between gap-1.5 px-4 py-2 border-b border-border bg-background shrink-0",
         className,
       )}
     >
-      {children}
-      <FilterIcon className="text-slate-300" />
+      <div className="flex gap-1.5 items-center">{children}</div>
+      <FilterIcon className="text-slate-400" />
     </div>
   );
 }

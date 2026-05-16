@@ -1,4 +1,3 @@
-// src/modules/leads/lib/validators.ts
 export const isRequired = (
   value: string,
   fieldName = "This field",
