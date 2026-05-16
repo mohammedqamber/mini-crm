@@ -1,8 +1,8 @@
 // src/modules/leads/hooks/useLeadForm.ts
 import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
 import { useCreateLead, useUpdateLead } from "./useLeads";
 import { Lead, LeadStatus } from "../types";
+import { showToast } from "@/lib/toast";
 
 interface FormData {
   name: string;
@@ -14,7 +14,6 @@ interface FormData {
 
 export function useLeadForm(lead?: Lead, isEdit = false) {
   const router = useRouter();
-  const { success, error } = useToast();
 
   const createLead = useCreateLead();
   const updateLead = useUpdateLead();
@@ -23,12 +22,15 @@ export function useLeadForm(lead?: Lead, isEdit = false) {
 
   const onSubmit = (data: FormData) => {
     const handleSuccess = (message: string) => {
-      success(message);
+      showToast({ variant: "success", message: message });
       router.push("/leads");
     };
 
     const handleError = (err: unknown, fallback: string) => {
-      error(err instanceof Error ? err.message : fallback);
+      showToast({
+        variant: "error",
+        message: err instanceof Error ? err.message : fallback,
+      });
     };
 
     if (isEdit && lead) {

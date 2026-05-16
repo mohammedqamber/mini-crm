@@ -13,8 +13,8 @@ import {
 import { StatusTransition } from "@/modules/leads/components/StatusTransition";
 import { DeleteLeadDialog } from "@/modules/leads/components/DeleteLeadDialog";
 import { useUpdateLeadStatus } from "@/modules/leads/hooks/useLeads";
-import { useToast } from "@/hooks/use-toast";
 import type { Lead, LeadStatus } from "@/modules/leads/types";
+import { showToast } from "@/lib/toast";
 
 interface LeadRowActionsProps {
   lead: Lead;
@@ -23,7 +23,6 @@ interface LeadRowActionsProps {
 export function LeadRowActions({ lead }: LeadRowActionsProps) {
   const router = useRouter();
   const updateLeadStatus = useUpdateLeadStatus();
-  const { success, error } = useToast();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const handleStatusTransition = (newStatus: LeadStatus) => {
@@ -31,10 +30,17 @@ export function LeadRowActions({ lead }: LeadRowActionsProps) {
       { id: lead.id, leadStatus: newStatus },
       {
         onSuccess: () => {
-          success(`Status updated to ${newStatus}`);
+          showToast({
+            variant: "success",
+            message: `Status updated to ${newStatus}`,
+          });
         },
         onError: (err) => {
-          error(err instanceof Error ? err.message : "Failed to update status");
+          showToast({
+            variant: "error",
+            message:
+              err instanceof Error ? err.message : "Failed to update status",
+          });
         },
       },
     );

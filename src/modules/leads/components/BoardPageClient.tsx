@@ -4,24 +4,22 @@ import { useEffect, useMemo, useState } from "react";
 import { DropResult } from "@hello-pangea/dnd";
 import { TopBar } from "@/components/layout/TopBar";
 import { useLeads, useUpdateLeadStatus } from "@/modules/leads/hooks/useLeads";
-import { useSearchParamsState } from "@/hooks/use-search-params-state";
+import { useSearchParamsState } from "@/hooks/useSearchParamsState";
 import { type Lead, type LeadStatus } from "@/modules/leads/types";
 import {
   ALL_STATUSES,
   getValidTransitions,
 } from "@/modules/leads/lib/status-machine";
-import { useToast } from "@/hooks/use-toast";
 import ErrorState from "@/components/error/ErrorState";
 import { LeadKanbanColumn } from "./LeadKanbanColumn";
 import { KanbanBoard } from "@/components/kanban-builder/KanbanBoard";
+import { showToast } from "@/lib/toast";
 
 export default function BoardPageClient() {
   const { data: leads, isLoading, isError, error, refetch } = useLeads();
   const updateLeadStatus = useUpdateLeadStatus();
   const [searchQuery] = useSearchParamsState("search");
   const [optimisticLeads, setOptimisticLeads] = useState<Lead[]>([]);
-
-  const { error: ErrorToast } = useToast();
 
   // Sync optimistic state with server data
   useEffect(() => {
@@ -74,7 +72,7 @@ export default function BoardPageClient() {
         destination.droppableId as LeadStatus,
       )
     ) {
-      ErrorToast("Invalid status update");
+      showToast({ variant: "error", message: "Invalid status update" });
       return;
     }
 

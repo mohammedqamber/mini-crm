@@ -1,8 +1,8 @@
 "use client";
 
 import { useDeleteLead } from "@/modules/leads/hooks/useLeads";
-import { useToast } from "@/hooks/use-toast";
 import { ConfirmActionDialog } from "@/components/ui/ConfirmActionDialog";
+import { showToast } from "@/lib/toast";
 
 interface DeleteLeadDialogProps {
   leadId: string;
@@ -18,16 +18,18 @@ export function DeleteLeadDialog({
   onOpenChange,
 }: DeleteLeadDialogProps) {
   const deleteLead = useDeleteLead();
-  const { success, error } = useToast();
 
   const handleDelete = () => {
     deleteLead.mutate(leadId, {
       onSuccess: () => {
-        success("Lead deleted successfully");
+        showToast({ variant: "success", message: "Lead deleted successfully" });
         onOpenChange(false);
       },
       onError: (err) => {
-        error(err instanceof Error ? err.message : "Failed to delete lead");
+        showToast({
+          variant: "error",
+          message: err instanceof Error ? err.message : "Failed to delete lead",
+        });
         onOpenChange(false);
       },
     });

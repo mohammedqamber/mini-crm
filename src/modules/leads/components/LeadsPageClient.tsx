@@ -6,7 +6,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { LeadListActions } from "@/modules/leads/components/LeadListActions";
 import { LeadsTable } from "@/modules/leads/components/LeadsTable";
 import { useLeads } from "@/modules/leads/hooks/useLeads";
-import { useSearchParamsState } from "@/hooks/use-search-params-state";
+import { useSearchParamsState } from "@/hooks/useSearchParamsState";
 import { useFilteredLeads } from "@/modules/leads/hooks/useFilteredLeads";
 import type { LeadStatus } from "@/modules/leads/types";
 import { useSearchParamsArrayState } from "@/hooks/useSearchParamsArrayState";
