@@ -4,12 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/Tooltip";
 import { StatusTransition } from "@/modules/leads/components/StatusTransition";
 import { DeleteLeadDialog } from "@/modules/leads/components/DeleteLeadDialog";
 import type { Lead } from "@/modules/leads/types";
