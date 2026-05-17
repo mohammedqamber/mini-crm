@@ -47,6 +47,7 @@ export function LeadForm({ lead, isEdit = false }: LeadFormProps) {
       onCancel={() => window.history.back()}
       onSubmit={handleSubmit(onSubmit)}
       submitLabel={isEdit ? "Update Lead" : "Create Lead"}
+      isSubmitting={isSubmitting}
     >
       <FormInput
         id="name"

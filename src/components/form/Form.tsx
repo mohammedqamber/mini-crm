@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import { Button } from "../ui/Button";
 
 type FormShellProps = {
@@ -41,8 +42,16 @@ export function FormShell({
       <div className="space-y-4">{children}</div>
 
       <div className="flex gap-3 pt-2">
-        <Button type="submit" disabled={isSubmitting || submitDisabled}>
-          {isSubmitting ? "Saving..." : submitLabel}
+        <Button
+          type="submit"
+          className="min-w-20"
+          disabled={isSubmitting || submitDisabled}
+        >
+          {isSubmitting ? (
+            <Loader2 className="animate-spin h-4 w-4" />
+          ) : (
+            submitLabel
+          )}
         </Button>
         <Button type="button" onClick={onCancel} variant="outline">
           {cancelLabel}
