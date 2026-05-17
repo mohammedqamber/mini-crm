@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Lock } from "lucide-react";
+import { ChevronDown, Loader, Lock } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +15,7 @@ import {
   STATUS_LABELS,
 } from "../lib/status-machine";
 import { useLeadStatusTransition } from "../hooks/useLeadStatusTransition";
+import { SimpleTooltip } from "@/components/common/Tooltip";
 
 interface StatusTransitionProps {
   currentStatus: LeadStatus;
@@ -31,10 +32,12 @@ export function StatusTransition({
 
   if (isTerminalStatus(currentStatus)) {
     return (
-      <div className="flex items-center gap-1.5 text-xs text-slate-400">
-        <Lock className="h-3 w-3" />
-        <span>Status Locked</span>
-      </div>
+      <SimpleTooltip message="This lead has reached a final status and can no longer be updated.">
+        <div className="flex items-center gap-1.5 text-xs text-slate-400 cursor-pointer">
+          <Lock className="h-3 w-3" />
+          <span>Status Locked</span>
+        </div>
+      </SimpleTooltip>
     );
   }
 
@@ -49,8 +52,14 @@ export function StatusTransition({
           disabled={isUpdating}
           className="h-7 px-2 text-xs text-slate-600 hover:text-slate-900"
         >
-          Change Status
-          <ChevronDown className="ml-1 h-3 w-3" />
+          {isUpdating ? (
+            <Loader className="animate-spin" />
+          ) : (
+            <>
+              Change Status
+              <ChevronDown className="ml-1 h-3 w-3" />
+            </>
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useDeleteLead } from "@/modules/leads/hooks/useLeads";
-import { ConfirmActionDialog } from "@/components/ui/ConfirmActionDialog";
+import { ConfirmActionDialog } from "@/components/common/ConfirmActionDialog";
 import { showToast } from "@/lib/toast";
 
 interface DeleteLeadDialogProps {

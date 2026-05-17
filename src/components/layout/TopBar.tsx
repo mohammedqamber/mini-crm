@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { Separator } from "@/components/ui/Separator";
-import { SearchInput } from "../ui/SearchInput";
+import { SearchInput } from "../common/SearchInput";
 import { Search } from "lucide-react";
 import { getPageTitle } from "@/lib/utils";
 

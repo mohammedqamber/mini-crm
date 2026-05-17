@@ -43,15 +43,14 @@ export function SearchInput({
         )}
       />
 
-      <div className="absolute right-2 flex items-center gap-1">
+      <div className="absolute right-2 flex items-center gap-1.5">
         {value && onClear && (
-          <button
-            type="button"
+          <div
             onClick={onClear}
             className="text-slate-400 hover:text-slate-600"
           >
             <X className="h-4 w-4" />
-          </button>
+          </div>
         )}
 
         {rightSlot}
