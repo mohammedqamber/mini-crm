@@ -1,4 +1,3 @@
-// src/modules/leads/hooks/useLeadForm.ts
 import { useRouter } from "next/navigation";
 import { useCreateLead, useUpdateLead } from "./useLeads";
 import { Lead, LeadStatus } from "../types";
@@ -9,7 +8,6 @@ interface FormData {
   email: string;
   phone: string;
   source: string;
-  status: LeadStatus;
 }
 
 export function useLeadForm(lead?: Lead, isEdit = false) {

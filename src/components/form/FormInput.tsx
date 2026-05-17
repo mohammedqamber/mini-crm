@@ -1,4 +1,3 @@
-// src/modules/leads/components/form-fields/FormInput.tsx
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import type {

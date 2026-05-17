@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Lead, LeadStatus } from "../types";
+import { Lead } from "../types";
 import { useLeadForm } from "../hooks/useLeadForm";
 import { FormInput } from "@/components/form/FormInput";
 import { isRequired, validateEmail, validatePhone } from "@/lib/validators";
@@ -12,7 +12,6 @@ interface FormData {
   email: string;
   phone: string;
   source: string;
-  status: LeadStatus;
 }
 
 interface LeadFormProps {
@@ -26,9 +25,7 @@ export function LeadForm({ lead, isEdit = false }: LeadFormProps) {
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<FormData>({
     mode: "onChange",
     defaultValues: {
@@ -36,11 +33,8 @@ export function LeadForm({ lead, isEdit = false }: LeadFormProps) {
       email: lead?.email ?? "",
       phone: lead?.phone ?? "",
       source: lead?.source ?? "",
-      status: (lead?.status ?? "NEW") as LeadStatus,
     },
   });
-
-  const watchedStatus = watch("status");
 
   return (
     <FormShell

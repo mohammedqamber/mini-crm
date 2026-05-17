@@ -21,7 +21,6 @@ export interface CreateLeadInput {
   email: string;
   phone: string;
   source: string;
-  status: LeadStatus;
 }
 
 export type UpdateLeadInput = Partial<CreateLeadInput>;
