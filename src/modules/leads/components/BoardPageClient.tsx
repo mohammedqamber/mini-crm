@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { DropResult } from "@hello-pangea/dnd";
 import { TopBar } from "@/components/layout/TopBar";
 import { useLeads, useUpdateLeadStatus } from "@/modules/leads/hooks/useLeads";
@@ -15,11 +15,19 @@ import { LeadKanbanColumn } from "./LeadKanbanColumn";
 import { KanbanBoard } from "@/components/kanban-builder/KanbanBoard";
 import { showToast } from "@/lib/toast";
 import { useLeadSearchShortcut } from "../hooks/useLeadSearchShortcut";
+import { debounce } from "@/lib/utils";
 
 export default function BoardPageClient() {
-  const { data: leads, isLoading, isError, error, refetch } = useLeads();
+  const [searchQuery, setSearchQuery] = useSearchParamsState("search");
+  const [inputValue, setInputValue] = useState(searchQuery ?? "");
+  const {
+    data: leads,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useLeads(searchQuery);
   const updateLeadStatus = useUpdateLeadStatus();
-  const [searchQuery] = useSearchParamsState("search");
   const [optimisticLeads, setOptimisticLeads] = useState<Lead[]>([]);
 
   // Sync optimistic state with server data
@@ -29,18 +37,27 @@ export default function BoardPageClient() {
     }
   }, [leads]);
 
+  useEffect(() => {
+    setInputValue(searchQuery ?? "");
+  }, [searchQuery]);
+
   useLeadSearchShortcut();
 
-  const filteredLeads = useMemo(() => {
-    if (!optimisticLeads.length) return [];
-    if (!searchQuery) return optimisticLeads;
+  const debouncedSetSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        setSearchQuery(value);
+      }, 300),
+    [setSearchQuery],
+  );
 
-    return optimisticLeads.filter(
-      (lead: Lead) =>
-        lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        lead.email.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-  }, [optimisticLeads, searchQuery]);
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setInputValue(value);
+      debouncedSetSearch(value);
+    },
+    [debouncedSetSearch],
+  );
 
   const onDragEnd = async (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -101,7 +118,7 @@ export default function BoardPageClient() {
 
   return (
     <div>
-      <TopBar searchValue={searchQuery} onSearchChange={() => {}} />
+      <TopBar searchValue={inputValue} onSearchChange={handleSearchChange} />
 
       <div className="p-6">
         <KanbanBoard onDragEnd={onDragEnd}>
@@ -110,7 +127,7 @@ export default function BoardPageClient() {
               <LeadKanbanColumn
                 key={status}
                 status={status}
-                leads={filteredLeads}
+                leads={optimisticLeads}
                 isLoading={isLoading}
               />
             ))}
