@@ -16,10 +16,10 @@ import { showToast } from "@/lib/toast";
 
 const LEADS_KEY = "leads";
 
-export function useLeads() {
+export function useLeads(search?: string, status?: LeadStatus[]) {
   return useQuery({
-    queryKey: [LEADS_KEY],
-    queryFn: fetchLeads,
+    queryKey: [LEADS_KEY, search, status],
+    queryFn: () => fetchLeads(search, status),
   });
 }
 

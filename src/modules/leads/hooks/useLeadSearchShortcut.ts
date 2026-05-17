@@ -7,7 +7,7 @@ export function useLeadSearchShortcut() {
 
       e.preventDefault();
       document
-        .querySelector<HTMLInputElement>('input[placeholder="Search leads..."]')
+        .querySelector<HTMLInputElement>('input[placeholder="Search"]')
         ?.focus();
     };
 

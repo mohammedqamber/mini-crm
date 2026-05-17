@@ -14,6 +14,7 @@ import ErrorState from "@/components/error/ErrorState";
 import { LeadKanbanColumn } from "./LeadKanbanColumn";
 import { KanbanBoard } from "@/components/kanban-builder/KanbanBoard";
 import { showToast } from "@/lib/toast";
+import { useLeadSearchShortcut } from "../hooks/useLeadSearchShortcut";
 
 export default function BoardPageClient() {
   const { data: leads, isLoading, isError, error, refetch } = useLeads();
@@ -28,19 +29,7 @@ export default function BoardPageClient() {
     }
   }, [leads]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "/" && !(e.target instanceof HTMLInputElement)) {
-        e.preventDefault();
-        const searchInput = document.querySelector<HTMLInputElement>(
-          'input[placeholder="Search leads..."]',
-        );
-        searchInput?.focus();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  useLeadSearchShortcut();
 
   const filteredLeads = useMemo(() => {
     if (!optimisticLeads.length) return [];

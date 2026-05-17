@@ -17,8 +17,18 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export async function fetchLeads(): Promise<Lead[]> {
-  const response = await fetch(`${API_BASE}/leads`);
+export async function fetchLeads(
+  search?: string,
+  status?: LeadStatus[],
+): Promise<Lead[]> {
+  const searchParams = new URLSearchParams();
+  if (search) searchParams.set("q", search);
+  if (status?.length) searchParams.set("status", status.join(","));
+
+  const query = searchParams.toString();
+  const url = `${API_BASE}/leads${query ? `?${query}` : ""}`;
+
+  const response = await fetch(url);
   return handleResponse<Lead[]>(response);
 }
 
