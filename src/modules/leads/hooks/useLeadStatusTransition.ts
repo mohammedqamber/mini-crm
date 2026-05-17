@@ -6,7 +6,7 @@ import { showToast } from "@/lib/toast";
 export function useLeadStatusTransition(leadId: string) {
   const updateLeadStatus = useUpdateLeadStatus();
 
-  const transitionStatus = useCallback(
+  const transitionStatusTo = useCallback(
     (leadStatus: LeadStatus) => {
       updateLeadStatus.mutate(
         { id: leadId, leadStatus },
@@ -31,6 +31,6 @@ export function useLeadStatusTransition(leadId: string) {
 
   return {
     isUpdating: updateLeadStatus.isPending,
-    transitionStatus,
+    transitionStatusTo,
   };
 }

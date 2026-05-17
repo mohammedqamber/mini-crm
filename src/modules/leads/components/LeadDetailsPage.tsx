@@ -24,7 +24,6 @@ const LeadDetailsPage = () => {
   const router = useRouter();
   const leadId = params.id as string;
   const { data: lead, isLoading, isError, error, refetch } = useLead(leadId);
-  const { isUpdating, transitionStatus } = useLeadStatusTransition(leadId);
 
   if (isLoading) {
     return <LeadPageSkeleton />;
@@ -58,9 +57,7 @@ const LeadDetailsPage = () => {
       </Button>
       <LeadDetailCard
         lead={lead}
-        isUpdating={isUpdating}
         onEdit={() => router.push(`/leads/${lead.id}/edit`)}
-        onStatusTransition={transitionStatus}
       />
     </div>
   );

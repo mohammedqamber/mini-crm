@@ -14,25 +14,26 @@ import {
   isTerminalStatus,
   STATUS_LABELS,
 } from "../lib/status-machine";
+import { useLeadStatusTransition } from "../hooks/useLeadStatusTransition";
 
 interface StatusTransitionProps {
   currentStatus: LeadStatus;
-  onTransition: (newStatus: LeadStatus) => void;
-  isUpdating?: boolean;
+  leadId: string;
 }
 
 export function StatusTransition({
   currentStatus,
-  onTransition,
-  isUpdating = false,
+  leadId,
 }: StatusTransitionProps) {
   const validNext = getValidTransitions(currentStatus);
+
+  const { isUpdating, transitionStatusTo } = useLeadStatusTransition(leadId);
 
   if (isTerminalStatus(currentStatus)) {
     return (
       <div className="flex items-center gap-1.5 text-xs text-slate-400">
         <Lock className="h-3 w-3" />
-        <span>Locked</span>
+        <span>Status Locked</span>
       </div>
     );
   }
@@ -56,7 +57,7 @@ export function StatusTransition({
         {validNext.map((status) => (
           <DropdownMenuItem
             key={status}
-            onClick={() => onTransition(status)}
+            onClick={() => transitionStatusTo(status)}
             className="text-xs"
           >
             Mark as {STATUS_LABELS[status]}

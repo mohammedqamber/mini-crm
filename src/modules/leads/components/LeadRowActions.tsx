@@ -12,9 +12,8 @@ import {
 } from "@/components/ui/Tooltip";
 import { StatusTransition } from "@/modules/leads/components/StatusTransition";
 import { DeleteLeadDialog } from "@/modules/leads/components/DeleteLeadDialog";
-import { useUpdateLeadStatus } from "@/modules/leads/hooks/useLeads";
 import type { Lead, LeadStatus } from "@/modules/leads/types";
-import { showToast } from "@/lib/toast";
+import { useLeadStatusTransition } from "../hooks/useLeadStatusTransition";
 
 interface LeadRowActionsProps {
   lead: Lead;
@@ -22,29 +21,10 @@ interface LeadRowActionsProps {
 
 export function LeadRowActions({ lead }: LeadRowActionsProps) {
   const router = useRouter();
-  const updateLeadStatus = useUpdateLeadStatus();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const handleStatusTransition = (newStatus: LeadStatus) => {
-    updateLeadStatus.mutate(
-      { id: lead.id, leadStatus: newStatus },
-      {
-        onSuccess: () => {
-          showToast({
-            variant: "success",
-            message: `Status updated to ${newStatus}`,
-          });
-        },
-        onError: (err) => {
-          showToast({
-            variant: "error",
-            message:
-              err instanceof Error ? err.message : "Failed to update status",
-          });
-        },
-      },
-    );
-  };
+  const { isUpdating: isStatusUpdating, transitionStatusTo } =
+    useLeadStatusTransition(lead.id);
 
   return (
     <>
@@ -94,11 +74,7 @@ export function LeadRowActions({ lead }: LeadRowActionsProps) {
         </TooltipProvider>
 
         <div className="ml-2 border-l border-slate-200 pl-2">
-          <StatusTransition
-            currentStatus={lead.status}
-            onTransition={handleStatusTransition}
-            isUpdating={updateLeadStatus.isPending}
-          />
+          <StatusTransition currentStatus={lead.status} leadId={lead.id} />
         </div>
       </div>
 

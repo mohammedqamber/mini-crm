@@ -9,9 +9,7 @@ import type { Lead, LeadStatus } from "@/modules/leads/types";
 
 interface LeadDetailCardProps {
   lead: Lead;
-  isUpdating: boolean;
   onEdit: () => void;
-  onStatusTransition: (status: LeadStatus) => void;
 }
 
 function DetailField({ label, value }: { label: string; value: string }) {
@@ -25,12 +23,7 @@ function DetailField({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function LeadDetailCard({
-  lead,
-  isUpdating,
-  onEdit,
-  onStatusTransition,
-}: LeadDetailCardProps) {
+export function LeadDetailCard({ lead, onEdit }: LeadDetailCardProps) {
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-6">
       <div className="flex items-start justify-between mb-6">
@@ -41,11 +34,7 @@ export function LeadDetailCard({
           <StatusBadge status={lead.status} />
         </div>
         <div className="flex items-center gap-2">
-          <StatusTransition
-            currentStatus={lead.status}
-            onTransition={onStatusTransition}
-            isUpdating={isUpdating}
-          />
+          <StatusTransition currentStatus={lead.status} leadId={lead.id} />
           <Button size="sm" variant="outline" onClick={onEdit}>
             <Pencil className="mr-1.5 h-3.5 w-3.5" />
             Edit
