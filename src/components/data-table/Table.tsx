@@ -13,14 +13,6 @@ export function DataTable<T>({
   isLoading = false,
   loadingRows = 5,
 }: DataTableProps<T>) {
-  if (isLoading) {
-    return <LoadingState columns={columns} loadingRows={loadingRows} />;
-  }
-
-  if (data.length === 0) {
-    return <EmptyState emptyMessage={emptyMessage} />;
-  }
-
   return (
     <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
       <div className="overflow-x-auto">
@@ -39,27 +31,57 @@ export function DataTable<T>({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200">
-            {data.map((row) => (
-              <tr
-                key={keyExtractor(row)}
-                className="group transition-colors hover:bg-slate-50/70"
-              >
-                {columns.map((col) => (
-                  <td
-                    key={col.key}
-                    className={cn(
-                      "px-6 py-4 text-slate-700 first:font-medium first:text-slate-900",
-                      col.className,
-                    )}
-                  >
-                    {col.render(row)}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            <TableBody
+              columns={columns}
+              data={data}
+              keyExtractor={keyExtractor}
+              emptyMessage={emptyMessage}
+              isLoading={isLoading}
+              loadingRows={loadingRows}
+            />
           </tbody>
         </table>
       </div>
     </div>
   );
 }
+
+const TableBody = <T,>({
+  columns,
+  data,
+  keyExtractor,
+  emptyMessage = "No data available",
+  isLoading,
+  loadingRows = 5,
+}: DataTableProps<T>) => {
+  if (isLoading) {
+    return <LoadingState columns={columns} loadingRows={loadingRows} />;
+  }
+
+  if (data.length === 0) {
+    return <EmptyState emptyMessage={emptyMessage} columns={columns.length} />;
+  }
+
+  return (
+    <>
+      {data.map((row) => (
+        <tr
+          key={keyExtractor(row)}
+          className="group transition-colors hover:bg-slate-50/70"
+        >
+          {columns.map((col) => (
+            <td
+              key={col.key}
+              className={cn(
+                "px-6 py-4 text-slate-700 first:font-medium first:text-slate-900",
+                col.className,
+              )}
+            >
+              {col.render(row)}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </>
+  );
+};
