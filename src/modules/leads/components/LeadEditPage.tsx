@@ -56,7 +56,7 @@ const LeadEdit = () => {
 export default function LeadEditPage() {
   return (
     <>
-      <TopBar />
+      <TopBar title="Edit Lead" />
       <LeadEdit />
     </>
   );

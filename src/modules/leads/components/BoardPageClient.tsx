@@ -118,7 +118,11 @@ export default function BoardPageClient() {
 
   return (
     <div>
-      <TopBar searchValue={inputValue} onSearchChange={handleSearchChange} />
+      <TopBar
+        title="Board"
+        searchValue={inputValue}
+        onSearchChange={handleSearchChange}
+      />
 
       <div className="p-6">
         <KanbanBoard onDragEnd={onDragEnd}>

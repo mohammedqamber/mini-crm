@@ -12,7 +12,7 @@ import ErrorState from "@/components/error/ErrorState";
 export default function LeadDetailPage() {
   return (
     <>
-      <TopBar />
+      <TopBar title="Lead Details" />
       <LeadDetailsPage />
     </>
   );

@@ -1,22 +1,23 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { Separator } from "@/components/ui/Separator";
 import { SearchInput } from "../common/SearchInput";
 import { Search } from "lucide-react";
-import { getPageTitle } from "@/lib/utils";
 
 interface TopBarProps {
+  title?: string;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   children?: React.ReactNode;
 }
 
-export function TopBar({ searchValue, onSearchChange, children }: TopBarProps) {
-  const pathname = usePathname();
-  const title = getPageTitle(pathname);
-
+export function TopBar({
+  title,
+  searchValue,
+  onSearchChange,
+  children,
+}: TopBarProps) {
   return (
     <header className="sticky top-0 z-30 flex h-13 items-center justify-between border-b border-slate-200 bg-white px-6">
       <div className="flex items-center gap-4">

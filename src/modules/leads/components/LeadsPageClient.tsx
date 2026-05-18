@@ -59,7 +59,11 @@ export default function LeadsPageClient() {
 
   return (
     <div>
-      <TopBar searchValue={inputValue} onSearchChange={handleSearchChange}>
+      <TopBar
+        title="Leads"
+        searchValue={inputValue}
+        onSearchChange={handleSearchChange}
+      >
         <LeadListActions onCreateLead={() => router.push("/leads/new")} />
       </TopBar>
       <FilterBar>
