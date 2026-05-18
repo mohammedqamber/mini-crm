@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { TopBar } from "@/components/layout/TopBar";
-import { LeadPageSkeleton } from "@/modules/leads/components/LeadPageStates";
+import { LeadPageSkeleton } from "@/modules/leads/components/LeadPageSkeleton";
 import { LeadForm } from "@/modules/leads/components/LeadForm";
 import { useLead } from "@/modules/leads/hooks/useLeads";
 import ErrorState from "@/components/error/ErrorState";

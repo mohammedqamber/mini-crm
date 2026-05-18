@@ -35,7 +35,7 @@ export function LeadKanbanColumn({
             {STATUS_LABELS[status]}
           </h3>
           <span className="ml-auto text-xs text-slate-400 font-medium">
-            {statusLeads.length}
+            {!isLoading && statusLeads.length}
           </span>
         </>
       }

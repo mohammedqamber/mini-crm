@@ -5,8 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { TopBar } from "@/components/layout/TopBar";
 import { LeadDetailCard } from "@/modules/leads/components/LeadDetailCard";
-import { LeadPageSkeleton } from "@/modules/leads/components/LeadPageStates";
-import { useLeadStatusTransition } from "@/modules/leads/hooks/useLeadStatusTransition";
+import { LeadPageSkeleton } from "@/modules/leads/components/LeadPageSkeleton";
 import { useLead } from "@/modules/leads/hooks/useLeads";
 import ErrorState from "@/components/error/ErrorState";
 
