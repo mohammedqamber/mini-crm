@@ -1,11 +1,3 @@
-export const isRequired = (
-  value: string,
-  fieldName = "This field",
-): true | string => {
-  if (!value.trim()) return `${fieldName} is required`;
-  return true;
-};
-
 export const validateEmail = (value: string): true | string => {
   if (!value.trim()) return "Email is required";
 

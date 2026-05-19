@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Lead } from "../types";
 import { useLeadForm } from "../hooks/useLeadForm";
 import { FormInput } from "@/components/form/FormInput";
-import { isRequired, validateEmail, validatePhone } from "@/lib/validators";
+import { validateEmail, validatePhone } from "@/lib/validators";
 import { FormShell } from "@/components/form/Form";
 
 interface FormData {
@@ -50,7 +50,7 @@ export function LeadForm({ lead, isEdit = false }: LeadFormProps) {
         placeholder="Full name"
         register={register}
         error={errors.name?.message}
-        rules={{ validate: (v: string) => isRequired(v, "Name") }}
+        rules={{ required: "Name is required" }}
       />
 
       <FormInput

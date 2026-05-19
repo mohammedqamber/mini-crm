@@ -2,8 +2,6 @@
 
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { StatusFilter } from "@/modules/leads/components/StatusFilter";
-import type { LeadStatus } from "@/modules/leads/types";
 
 interface LeadListActionsProps {
   onCreateLead: () => void;
