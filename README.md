@@ -2,10 +2,6 @@
 
 A clean, scalable Lead Management CRM built with Next.js App Router, TypeScript, Tailwind CSS, and shadcn/ui.
 
-## Demo Video Link
-
-https://www.loom.com/share/99f4fc5ae8344bc0940343223a95df3c
-
 ## Tech Stack
 
 - **Framework**: Next.js 16 with App Router — provides file-based routing, server components, and a modern React foundation.
